@@ -224,6 +224,13 @@ background: linear-gradient(90deg, rgb(0, 0, 45) 31%, rgb(0, 0, 45) 100%);
 	padding:5px;
 }
 
+#myphoto img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 4px;
+}
+
 
 
 
