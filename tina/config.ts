@@ -125,12 +125,14 @@ export default defineConfig({
           { type: "string", name: "title", label: "Title", isTitle: true, required: true },
           {
             type: "object",
-            name: "links",
-            label: "Links",
+            name: "topics",
+            label: "Topics",
             list: true,
             fields: [
-              { type: "string", name: "label", label: "Label" },
-              { type: "string", name: "url", label: "URL" },
+              { type: "string", name: "topicName", label: "Topic Name" },
+              { type: "string", name: "notes", label: "Notes", ui: { component: "textarea" } },
+              { type: "image", name: "pdf", label: "PDF Document" },
+              { type: "string", name: "link", label: "Link URL" },
             ],
           },
           { type: "rich-text", name: "body", label: "Body", isBody: true },

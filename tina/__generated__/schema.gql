@@ -268,28 +268,32 @@ type PagesConnection implements Connection {
   edges: [PagesConnectionEdges]
 }
 
-type EcontentLinks {
-  label: String
-  url: String
+type EcontentTopics {
+  topicName: String
+  notes: String
+  pdf: String
+  link: String
 }
 
 type Econtent implements Node & Document {
   title: String!
-  links: [EcontentLinks]
+  topics: [EcontentTopics]
   body: RichText
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
 }
 
-input EcontentLinksFilter {
-  label: StringFilter
-  url: StringFilter
+input EcontentTopicsFilter {
+  topicName: StringFilter
+  notes: StringFilter
+  pdf: ImageFilter
+  link: StringFilter
 }
 
 input EcontentFilter {
   title: StringFilter
-  links: EcontentLinksFilter
+  topics: EcontentTopicsFilter
   body: RichTextFilter
 }
 
@@ -393,14 +397,16 @@ input PagesMutation {
   body: RichText
 }
 
-input EcontentLinksMutation {
-  label: String
-  url: String
+input EcontentTopicsMutation {
+  topicName: String
+  notes: String
+  pdf: String
+  link: String
 }
 
 input EcontentMutation {
   title: String
-  links: [EcontentLinksMutation]
+  topics: [EcontentTopicsMutation]
   body: RichText
 }
 

@@ -389,30 +389,34 @@ export type PagesConnection = Connection & {
   edges?: Maybe<Array<Maybe<PagesConnectionEdges>>>;
 };
 
-export type EcontentLinks = {
-  __typename?: 'EcontentLinks';
-  label?: Maybe<Scalars['String']['output']>;
-  url?: Maybe<Scalars['String']['output']>;
+export type EcontentTopics = {
+  __typename?: 'EcontentTopics';
+  topicName?: Maybe<Scalars['String']['output']>;
+  notes?: Maybe<Scalars['String']['output']>;
+  pdf?: Maybe<Scalars['String']['output']>;
+  link?: Maybe<Scalars['String']['output']>;
 };
 
 export type Econtent = Node & Document & {
   __typename?: 'Econtent';
   title: Scalars['String']['output'];
-  links?: Maybe<Array<Maybe<EcontentLinks>>>;
+  topics?: Maybe<Array<Maybe<EcontentTopics>>>;
   body?: Maybe<Scalars['RichText']['output']>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
   _values: Scalars['JSON']['output'];
 };
 
-export type EcontentLinksFilter = {
-  label?: InputMaybe<StringFilter>;
-  url?: InputMaybe<StringFilter>;
+export type EcontentTopicsFilter = {
+  topicName?: InputMaybe<StringFilter>;
+  notes?: InputMaybe<StringFilter>;
+  pdf?: InputMaybe<ImageFilter>;
+  link?: InputMaybe<StringFilter>;
 };
 
 export type EcontentFilter = {
   title?: InputMaybe<StringFilter>;
-  links?: InputMaybe<EcontentLinksFilter>;
+  topics?: InputMaybe<EcontentTopicsFilter>;
   body?: InputMaybe<RichTextFilter>;
 };
 
@@ -588,14 +592,16 @@ export type PagesMutation = {
   body?: InputMaybe<Scalars['RichText']['input']>;
 };
 
-export type EcontentLinksMutation = {
-  label?: InputMaybe<Scalars['String']['input']>;
-  url?: InputMaybe<Scalars['String']['input']>;
+export type EcontentTopicsMutation = {
+  topicName?: InputMaybe<Scalars['String']['input']>;
+  notes?: InputMaybe<Scalars['String']['input']>;
+  pdf?: InputMaybe<Scalars['String']['input']>;
+  link?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type EcontentMutation = {
   title?: InputMaybe<Scalars['String']['input']>;
-  links?: InputMaybe<Array<InputMaybe<EcontentLinksMutation>>>;
+  topics?: InputMaybe<Array<InputMaybe<EcontentTopicsMutation>>>;
   body?: InputMaybe<Scalars['RichText']['input']>;
 };
 
@@ -681,14 +687,16 @@ export type PagesFilter = {
   body?: RichTextFilter | null | undefined;
 };
 
-export type EcontentLinksFilter = {
-  label?: StringFilter | null | undefined;
-  url?: StringFilter | null | undefined;
+export type EcontentTopicsFilter = {
+  topicName?: StringFilter | null | undefined;
+  notes?: StringFilter | null | undefined;
+  pdf?: ImageFilter | null | undefined;
+  link?: StringFilter | null | undefined;
 };
 
 export type EcontentFilter = {
   title?: StringFilter | null | undefined;
-  links?: EcontentLinksFilter | null | undefined;
+  topics?: EcontentTopicsFilter | null | undefined;
   body?: RichTextFilter | null | undefined;
 };
 
@@ -696,7 +704,7 @@ export type HomePartsFragment = { __typename: 'Home', title: string, name: strin
 
 export type PagesPartsFragment = { __typename: 'Pages', title: string, pdfFile: string | null, body: TinaMarkdownContent | null };
 
-export type EcontentPartsFragment = { __typename: 'Econtent', title: string, body: TinaMarkdownContent | null, links: Array<{ __typename: 'EcontentLinks', label: string | null, url: string | null } | null> | null };
+export type EcontentPartsFragment = { __typename: 'Econtent', title: string, body: TinaMarkdownContent | null, topics: Array<{ __typename: 'EcontentTopics', topicName: string | null, notes: string | null, pdf: string | null, link: string | null } | null> | null };
 
 export type HomeQueryVariables = Exact<{
   relativePath: string;
@@ -741,7 +749,7 @@ export type EcontentQueryVariables = Exact<{
 }>;
 
 
-export type EcontentQuery = { econtent: { __typename: 'Econtent', id: string, title: string, body: TinaMarkdownContent | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, links: Array<{ __typename: 'EcontentLinks', label: string | null, url: string | null } | null> | null } };
+export type EcontentQuery = { econtent: { __typename: 'Econtent', id: string, title: string, body: TinaMarkdownContent | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, topics: Array<{ __typename: 'EcontentTopics', topicName: string | null, notes: string | null, pdf: string | null, link: string | null } | null> | null } };
 
 export type EcontentConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
@@ -753,7 +761,7 @@ export type EcontentConnectionQueryVariables = Exact<{
 }>;
 
 
-export type EcontentConnectionQuery = { econtentConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Econtent', id: string, title: string, body: TinaMarkdownContent | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, links: Array<{ __typename: 'EcontentLinks', label: string | null, url: string | null } | null> | null } | null } | null> | null } };
+export type EcontentConnectionQuery = { econtentConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Econtent', id: string, title: string, body: TinaMarkdownContent | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, topics: Array<{ __typename: 'EcontentTopics', topicName: string | null, notes: string | null, pdf: string | null, link: string | null } | null> | null } | null } | null> | null } };
 
 export const HomePartsFragmentDoc = gql`
     fragment HomeParts on Home {
@@ -817,10 +825,12 @@ export const EcontentPartsFragmentDoc = gql`
     fragment EcontentParts on Econtent {
   __typename
   title
-  links {
+  topics {
     __typename
-    label
-    url
+    topicName
+    notes
+    pdf
+    link
   }
   body
 }

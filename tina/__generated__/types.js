@@ -67,10 +67,12 @@ export const EcontentPartsFragmentDoc = gql`
     fragment EcontentParts on Econtent {
   __typename
   title
-  links {
+  topics {
     __typename
-    label
-    url
+    topicName
+    notes
+    pdf
+    link
   }
   body
 }
