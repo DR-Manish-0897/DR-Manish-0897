@@ -1,13 +1,16 @@
 import React from 'react';
-import client from '../../tina/__generated__/client';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
 
 export default async function Header() {
-  let data;
+  let data: any = {};
   try {
-    const res = await client.queries.home({ relativePath: 'index.md' });
-    data = res.data.home;
+    const filePath = path.join(process.cwd(), 'content', 'home', 'index.md');
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    data = matter(fileContents).data;
   } catch (error) {
-    console.error("Error fetching header data from TinaCMS:", error);
+    console.error("Error fetching header data:", error);
   }
 
   // Fallbacks if data fails to load

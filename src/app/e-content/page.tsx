@@ -1,15 +1,25 @@
 import React from 'react';
-import client from '../../../tina/__generated__/client';
-import { TinaMarkdown } from 'tinacms/dist/rich-text';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import ReactMarkdown from 'react-markdown';
 
 export default async function EContentPage() {
-  let documents = [];
+  let documents: any[] = [];
   try {
-    const res = await client.queries.econtentConnection();
-    documents = res.data.econtentConnection.edges?.map((edge: any) => edge.node) || [];
+    const econtentDir = path.join(process.cwd(), 'content', 'econtent');
+    const filenames = fs.readdirSync(econtentDir);
+    documents = filenames
+      .filter((name) => name.endsWith('.md'))
+      .map((name) => {
+        const filePath = path.join(econtentDir, name);
+        const fileContents = fs.readFileSync(filePath, 'utf8');
+        const parsed = matter(fileContents);
+        return { data: parsed.data, content: parsed.content };
+      });
   } catch (error) {
     console.error("Error fetching e-content:", error);
-    return <div>Error loading E-Content. Please ensure TinaCMS is built.</div>;
+    return <div>Error loading E-Content.</div>;
   }
 
   return (
@@ -19,13 +29,13 @@ export default async function EContentPage() {
         <div key={index} className="e-content-subject">
           <details name="econtent-accordion" style={{ marginBottom: '10px', cursor: 'pointer' }}>
             <summary style={{ outline: 'none' }}>
-              <h3 className="e-content-title" style={{ display: 'inline-block', margin: '0 0 10px 0', pointerEvents: 'none' }}>{doc.title}</h3>
+              <h3 className="e-content-title" style={{ display: 'inline-block', margin: '0 0 10px 0', pointerEvents: 'none' }}>{doc.data.title}</h3>
             </summary>
             
             <div style={{ paddingLeft: '15px', marginTop: '10px', cursor: 'default' }}>
-              {doc.topics && doc.topics.length > 0 && (
+              {doc.data.topics && doc.data.topics.length > 0 && (
                 <div className="e-content-topics">
-                  {doc.topics.map((topic: any, idx: number) => (
+                  {doc.data.topics.map((topic: any, idx: number) => (
                     <div key={idx} className="e-content-topic-card" style={{ marginBottom: '15px', padding: '10px', border: '1px solid #eaeaea', borderRadius: '5px' }}>
                       <h4 style={{ margin: '0 0 10px 0', color: '#0056b3' }}>{topic.topicName}</h4>
                       {topic.notes && <p style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#555' }}>{topic.notes}</p>}
@@ -47,7 +57,7 @@ export default async function EContentPage() {
               )}
               
               <div className="tina-markdown">
-                <TinaMarkdown content={doc.body} />
+                <ReactMarkdown>{doc.content}</ReactMarkdown>
               </div>
             </div>
           </details>

@@ -1,14 +1,20 @@
 import React from 'react';
-import client from '../../tina/__generated__/client';
-import { TinaMarkdown } from 'tinacms/dist/rich-text';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import ReactMarkdown from 'react-markdown';
 
 export default async function HomePage() {
-  let data;
+  let data: any = {};
+  let content = "";
   try {
-    const res = await client.queries.home({ relativePath: 'index.md' });
-    data = res.data.home;
+    const filePath = path.join(process.cwd(), 'content', 'home', 'index.md');
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const parsed = matter(fileContents);
+    data = parsed.data;
+    content = parsed.content;
   } catch (error) {
-    console.error("Error fetching home data from TinaCMS:", error);
+    console.error("Error fetching home data:", error);
     return <div>Error loading content. Please ensure TinaCMS is built.</div>;
   }
 
@@ -124,7 +130,7 @@ export default async function HomePage() {
 
       {/* Body Content */}
       <div className="tina-markdown" style={{ marginTop: "20px" }}>
-        <TinaMarkdown content={data.body} />
+        <ReactMarkdown>{content}</ReactMarkdown>
       </div>
     </div>
   );

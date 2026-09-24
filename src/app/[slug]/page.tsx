@@ -1,16 +1,22 @@
 import React from 'react';
-import client from '../../../tina/__generated__/client';
-import { TinaMarkdown } from 'tinacms/dist/rich-text';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import ReactMarkdown from 'react-markdown';
 
 export default async function DynamicPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  let data;
+  let data: any = {};
+  let content = "";
   try {
-    const res = await client.queries.pages({ relativePath: `${slug}.md` });
-    data = res.data.pages;
+    const filePath = path.join(process.cwd(), 'content', 'pages', `${slug}.md`);
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const parsed = matter(fileContents);
+    data = parsed.data;
+    content = parsed.content;
   } catch (error) {
     console.error(`Error fetching page ${slug}:`, error);
-    return <div>Page not found or TinaCMS not built.</div>;
+    return <div>Page not found.</div>;
   }
 
   return (
@@ -30,7 +36,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
       )}
 
       <div className="tina-markdown">
-        <TinaMarkdown content={data.body} />
+        <ReactMarkdown>{content}</ReactMarkdown>
       </div>
     </div>
   );
@@ -38,10 +44,14 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
 
 export async function generateStaticParams() {
   try {
-    const pages = await client.queries.pagesConnection();
-    return pages.data.pagesConnection.edges?.map((edge: any) => ({
-      slug: edge.node._sys.filename,
-    })) || [];
+    const pagesDir = path.join(process.cwd(), 'content', 'pages');
+    if (!fs.existsSync(pagesDir)) return [];
+    const filenames = fs.readdirSync(pagesDir);
+    return filenames
+      .filter((name) => name.endsWith('.md'))
+      .map((name) => ({
+        slug: name.replace(/\.md$/, ''),
+      }));
   } catch {
     return [];
   }
