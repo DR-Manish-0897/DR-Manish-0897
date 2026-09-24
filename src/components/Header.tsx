@@ -18,7 +18,7 @@ export default async function Header() {
   const email2 = data?.email2 || "manish.kumar@cuh.ac.in";
   const phone = data?.phone || "+91-9255140623";
   const logoUrl = data?.logo || "/cuh-logo.png";
-  const profileUrl = data?.profilePhoto || "/zz3.png";
+  const profileUrl = data?.profilePhoto || "/profile-img.jpg";
 
   return (
     <div id="header">
